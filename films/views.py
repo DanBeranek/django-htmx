@@ -60,3 +60,13 @@ def add_film(request):
     # return template fragment with all the user's films
     films = request.user.films.all()
     return render(request, 'partials/film-list.html', {'films': films})
+
+
+def delete_film(request, pk):
+    # remove film from user's list
+    request.user.films.remove(pk)
+
+    # return the template fragment
+    films = request.user.films.all()
+    return render(request, 'partials/film-list.html', {'films': films})
+
