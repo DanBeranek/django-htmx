@@ -4,8 +4,11 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
 from django.contrib.auth import get_user_model
+from django.views.generic.list import ListView
 
 from films.forms import RegisterForm
+from films.models import Film
+
 
 
 # Create your views here.
@@ -25,6 +28,16 @@ class RegisterView(FormView):
     def form_valid(self, form):
         form.save()  # save the user
         return super().form_valid(form)
+
+
+class FilmList(ListView):
+    template_name = 'films.html'
+    model = Film
+    context_object_name = 'films'
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.films.all()
 
 
 def check_username(request):
