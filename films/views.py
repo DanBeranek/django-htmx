@@ -6,9 +6,12 @@ from django.views.generic import FormView, TemplateView
 from django.contrib.auth import get_user_model
 from django.views.generic.list import ListView
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.http import require_http_methods
+
 from films.forms import RegisterForm
 from films.models import Film
-
 
 
 # Create your views here.
@@ -30,7 +33,7 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 
-class FilmList(ListView):
+class FilmList(LoginRequiredMixin, ListView):
     template_name = 'films.html'
     model = Film
     context_object_name = 'films'
@@ -48,6 +51,7 @@ def check_username(request):
         return HttpResponse("<div id='username-error' class='success'>This username is available.</div>")
 
 
+@login_required
 def add_film(request):
     name = request.POST.get('filmname')
 
@@ -62,6 +66,8 @@ def add_film(request):
     return render(request, 'partials/film-list.html', {'films': films})
 
 
+@login_required
+@require_http_methods(['DELETE'])
 def delete_film(request, pk):
     # remove film from user's list
     request.user.films.remove(pk)
