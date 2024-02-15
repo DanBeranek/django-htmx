@@ -46,3 +46,17 @@ def check_username(request):
         return HttpResponse("<div id='username-error' class='error'>This username already exists.</div>")
     else:
         return HttpResponse("<div id='username-error' class='success'>This username is available.</div>")
+
+
+def add_film(request):
+    name = request.POST.get('filmname')
+
+    # add film
+    film = Film.objects.create(name=name)
+
+    # add the film to the user's list
+    request.user.films.add(film)
+
+    # return template fragment with all the user's films
+    films = request.user.films.all()
+    return render(request, 'partials/film-list.html', {'films': films})

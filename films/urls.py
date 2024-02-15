@@ -11,7 +11,8 @@ urlpatterns = [
 ]
 
 htmx_urlpatterns = [
-    path('check_username/', views.check_username, name='check_username')
+    path('check_username/', views.check_username, name='check-username'),
+    path('add-film/', views.add_film, name='add-film'),
 ]
 
 urlpatterns += htmx_urlpatterns
